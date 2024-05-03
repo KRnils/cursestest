@@ -1,7 +1,5 @@
 import curses
 
-# Initialize color pairs
-
 def draw_labyrinth(stdscr):
     # Set up initial position and screen
     curses.curs_set(0)  # Hide the cursor
@@ -17,11 +15,11 @@ def draw_labyrinth(stdscr):
     labyrinth = [
         "##########",
         "#        #",
-        "# ###### #",
         "#   #    #",
-        "# # ######",
         "#   #    #",
-        "### #    #",
+        "#   #    #",
+        "#   #    #",
+        "#   #    #",
         "#   #    #",
         "#        #",
         "##########"
@@ -44,10 +42,12 @@ def draw_labyrinth(stdscr):
         # Check if the new position is within bounds and not a wall
         if 0 < new_y < height - 1 and 0 < new_x < width - 1 and labyrinth[new_y][new_x] == ' ':
             start_y, start_x = new_y, new_x
-
-
+    
+    
     curses.start_color()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)  # Color pair for the endpoint
+
+
     # Main game loop
     while True:
         stdscr.clear()
@@ -74,9 +74,16 @@ def draw_labyrinth(stdscr):
 
         # Check if the player has reached the end
         if start_y == end_y and start_x == end_x:
+            # Clear the screen
             stdscr.clear()
-            stdscr.addstr(height // 2, width // 2 - 5, "Congratulations!")
-            stdscr.addstr(height // 2 + 1, width // 2 - 10, "You reached the end of the labyrinth!")
+
+            # Display the congratulatory message if screen is large enough
+            if height >= 3 and width >= 21:
+                stdscr.addstr(height // 2, width // 2 - 10, "Congratulations!")
+                stdscr.addstr(height // 2 + 1, width // 2 - 10, "You reached the end of the labyrinth!")
+            else:
+                stdscr.addstr(0, 0, "Congratulations! You reached the end of the labyrinth!")
+            
             stdscr.refresh()
             stdscr.getch()  # Wait for user to press a key before exiting
             break
